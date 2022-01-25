@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
+import 'package:todo_app/data/model/todo.dart';
 import 'package:todo_app/data/services/todo_service_exception.dart';
 
 abstract class TodoService {
@@ -10,10 +11,12 @@ abstract class TodoService {
 
   Future<dynamic> getParsedJsonData();
 
-  Future<bool> postRawData(
-    String encodedJson,
-    Map<String, String> header,
-  );
+  Future<bool> postRawData(String encodedJson,
+      Map<String, String> headers);
+
+  Future<dynamic> deleteData(Todo todo, Map<String, String> headers);
+
+  Future<dynamic> updateExistingData(Todo todo, Map<String, String> headers);
 }
 
 class TodoServiceImpl extends TodoService {
@@ -29,13 +32,28 @@ class TodoServiceImpl extends TodoService {
   }
 
   @override
-  Future<bool> postRawData(String encodedJson, Map<String, String> header) async {
-    final response = await http.post(baseUrl, headers: header, body: encodedJson);
+  Future<bool> postRawData(String encodedJson,
+      Map<String, String> header) async {
+    final response = await http.post(
+        baseUrl, headers: header, body: encodedJson);
 
-    if (response.statusCode == 201 ) {
+    if (response.statusCode == 201) {
       return true;
     }
 
     return false;
+  }
+
+  @override
+  Future deleteData(Todo todo, Map<String, String> headers) async {
+    final response = await http.delete(
+        baseUrl.replace(path: TodoService.unencodedPath + '/${todo.id}'), headers: headers);
+
+  }
+
+  @override
+  Future updateExistingData(Todo todo, Map<String, String> headers) async {
+    // TODO: implement updateExistingData
+    throw UnimplementedError();
   }
 }
