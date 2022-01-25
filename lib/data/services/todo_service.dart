@@ -9,16 +9,19 @@ abstract class TodoService {
   static const unencodedPath = '/todos'; // path for the endpoint
   final baseUrl = Uri.http(authority, unencodedPath);
 
+  ///Returns a [List] if the data that json is an [Array].
+  ///Returns a [Map]<[String], [dyanmic]> if the json data is an [Object]
   Future<dynamic> getParsedJsonData();
-
-  Future<bool> postRawData(String encodedJson, Map<String, String> headers);
-
-  Future<dynamic> deleteData(Todo todo, Map<String, String> headers);
-
-  Future<dynamic> updateExistingData(Todo todo, Map<String, String> headers);
+  Future<bool> postRawData(String encodedJson);
+  Future<dynamic> deleteData(Todo todo);
+  Future<dynamic> updateData(Todo todo);
 }
 
 class TodoServiceImpl extends TodoService {
+  final _header = {
+    'content-type': 'application/json'
+  };
+
   @override
   Future getParsedJsonData() async {
     final response = await http.get(baseUrl);
@@ -32,9 +35,9 @@ class TodoServiceImpl extends TodoService {
 
   @override
   Future<bool> postRawData(
-      String encodedJson, Map<String, String> header) async {
+      String encodedJson) async {
     final response =
-        await http.post(baseUrl, headers: header, body: encodedJson);
+        await http.post(baseUrl, headers: _header, body: encodedJson);
 
     if (response.statusCode == 201) {
       return true;
@@ -44,16 +47,16 @@ class TodoServiceImpl extends TodoService {
   }
 
   @override
-  Future deleteData(Todo todo, Map<String, String> headers) async {
+  Future deleteData(Todo todo) async {
     final response = await http.delete(
         baseUrl.replace(path: TodoService.unencodedPath + '/${todo.id}'),
-        headers: headers);
+        headers: _header);
   }
 
   @override
-  Future updateExistingData(Todo todo, Map<String, String> headers) async {
+  Future updateData(Todo todo) async {
     final response = await http.put(
         baseUrl.replace(path: TodoService.unencodedPath + '/${todo.id}'),
-        headers: headers);
+        headers: _header);
   }
 }

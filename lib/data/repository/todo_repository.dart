@@ -7,6 +7,10 @@ abstract class TodoRepository {
   Future<List<Todo>> getTodos();
 
   Future<void> saveTodo(Todo todo);
+
+  Future updateTodo(Todo todo);
+
+  Future deleteTodo(Todo todo);
 }
 
 class TodoRepositoryImpl implements TodoRepository {
@@ -29,7 +33,16 @@ class TodoRepositoryImpl implements TodoRepository {
   @override
   Future<void> saveTodo(Todo todo) async {
     final encodedJson = json.encode(todo);
-    _service.postRawData(encodedJson, {'content-type':'application/json'});
+    _service.postRawData(encodedJson);
+  }
 
+  @override
+  Future deleteTodo(Todo todo) async {
+    await _service.deleteData(todo);
+  }
+
+  @override
+  Future updateTodo(Todo todo) async {
+    await _service.updateData(todo);
   }
 }
