@@ -11,8 +11,7 @@ abstract class TodoService {
 
   Future<dynamic> getParsedJsonData();
 
-  Future<bool> postRawData(String encodedJson,
-      Map<String, String> headers);
+  Future<bool> postRawData(String encodedJson, Map<String, String> headers);
 
   Future<dynamic> deleteData(Todo todo, Map<String, String> headers);
 
@@ -32,10 +31,10 @@ class TodoServiceImpl extends TodoService {
   }
 
   @override
-  Future<bool> postRawData(String encodedJson,
-      Map<String, String> header) async {
-    final response = await http.post(
-        baseUrl, headers: header, body: encodedJson);
+  Future<bool> postRawData(
+      String encodedJson, Map<String, String> header) async {
+    final response =
+        await http.post(baseUrl, headers: header, body: encodedJson);
 
     if (response.statusCode == 201) {
       return true;
@@ -47,13 +46,14 @@ class TodoServiceImpl extends TodoService {
   @override
   Future deleteData(Todo todo, Map<String, String> headers) async {
     final response = await http.delete(
-        baseUrl.replace(path: TodoService.unencodedPath + '/${todo.id}'), headers: headers);
-
+        baseUrl.replace(path: TodoService.unencodedPath + '/${todo.id}'),
+        headers: headers);
   }
 
   @override
   Future updateExistingData(Todo todo, Map<String, String> headers) async {
-    // TODO: implement updateExistingData
-    throw UnimplementedError();
+    final response = await http.put(
+        baseUrl.replace(path: TodoService.unencodedPath + '/${todo.id}'),
+        headers: headers);
   }
 }
