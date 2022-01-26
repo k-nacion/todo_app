@@ -1,3 +1,4 @@
+import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:todo_app/app_route.dart';
 import 'package:todo_app/app_theme.dart';
@@ -12,7 +13,7 @@ class Main extends StatelessWidget {
     return MaterialApp(
       title:'Todo App',
       debugShowCheckedModeBanner: false,
-      theme: AppTheme.generateGlobalAppTheme(),
+      theme: FlexThemeData.light(scheme: FlexScheme.rosewood),
       onGenerateRoute: AppRoute.generateAppRoute,
       initialRoute: AppRoute.home,
     );
